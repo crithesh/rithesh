@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #111111;
+        }
+
+        .analytics-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 25px 55px 35px;
+        }
+
+        /* Header */
+        .header h1 {
+            font-size: 25px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #555555;
+        }
+
+        /* Analytics Grid */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 120px;
+            row-gap: 65px;
+            margin-top: 55px;
+        }
+
+        .analysis-item {
+            min-height: 100px;
+        }
+
+        .label {
+            font-size: 17px;
+            color: #555555;
+            margin-bottom: 12px;
+        }
+
+        .value {
+            font-size: 40px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        /* Colors */
+        .green {
+            color: #168b2f;
+        }
+
+        .red {
+            color: #8f2727;
+        }
+
+        .bold {
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .analysis-container {
+                padding: 25px;
+            }
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+                row-gap: 35px;
+                margin-top: 40px;
+            }
+
+            .value {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="analysis-container">
+
+        <!-- Header -->
+        <div class="header">
+            <a href="javascript:history.back()" style="display:inline-block;color:#14518a;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:14px;">&larr; Back</a>
+            <h1>Analysis</h1>
+            <p>All routes - live data</p>
+        </div>
+
+        <!-- Analysis -->
+        <div class="analysis-grid">
+
+            <!-- On time trips -->
+            <div class="analysis-item">
+                <div class="label">On time trips</div>
+                <div class="value green" id="onTimeValue">-</div>
+            </div>
+
+            <!-- Late trips -->
+            <div class="analysis-item">
+                <div class="label">Late trips</div>
+                <div class="value red" id="lateValue">-</div>
+            </div>
+
+            <!-- Total trips -->
+            <div class="analysis-item">
+                <div class="label">Total trips</div>
+                <div class="value" id="totalTripsValue">-</div>
+            </div>
+
+            <!-- Total headcount -->
+            <div class="analysis-item">
+                <div class="label">Total headcount</div>
+                <div class="value bold" id="headcountValue">-</div>
+            </div>
+
+            <!-- Utilization -->
+            <div class="analysis-item">
+                <div class="label">Utilization</div>
+                <div class="value" id="utilizationValue">-</div>
+            </div>
+
+            <!-- Average headcount -->
+            <div class="analysis-item">
+                <div class="label">Avg headcount / trip</div>
+                <div class="value" id="avgHeadcountValue">-</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+<script>
+    fetch("http://127.0.0.1:5000/api/analysis")
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            if (!data.success) return;
+            document.getElementById("onTimeValue").innerText = data.on_time_trips;
+            document.getElementById("lateValue").innerText = data.late_trips;
+            document.getElementById("totalTripsValue").innerText = data.total_trips;
+            document.getElementById("headcountValue").innerText = data.total_headcount;
+            document.getElementById("utilizationValue").innerText = data.utilization + "%";
+            document.getElementById("avgHeadcountValue").innerText = data.avg_headcount;
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+</script>
+</body>
+</html>

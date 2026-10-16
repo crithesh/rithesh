@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Trip</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* CONFIRM TRIP BOX */
+        .confirm-box {
+            width: 590px;
+            background: white;
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .route-icon {
+            width: 42px;
+            height: 42px;
+            color: #1260df;
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: 700;
+            color: #142a52;
+        }
+
+        .close {
+            font-size: 38px;
+            color: #142a52;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* LABELS */
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #142a52;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .small-icon {
+            font-size: 25px;
+            color: #142a52;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* INPUT BOX */
+        .input-box {
+            width: 100%;
+            height: 60px;
+            border: 1px solid #d7e1ef;
+            background: #f5f8fc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            font-size: 17px;
+            color: #142a52;
+        }
+
+        /* ROUTE BOX */
+        .route-box {
+            width: 100%;
+            background: #f1f7ff;
+            border-radius: 10px;
+            padding: 20px 25px;
+            position: relative;
+        }
+
+        .route-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 22px;
+        }
+
+        .route-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .route-dot {
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        .green {
+            background: #35b66a;
+            border: 4px solid #b9eacb;
+        }
+
+        .red {
+            background: #ef4760;
+            border: 4px solid #ffd0d7;
+        }
+
+        .route-line {
+            position: absolute;
+            left: 9px;
+            top: 19px;
+            width: 3px;
+            height: 45px;
+            background: #77a8ef;
+        }
+
+        .from {
+            color: #269263;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .to {
+            color: #e3485d;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .place {
+            color: #142a52;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* BUTTONS */
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 32px;
+        }
+
+        button {
+            height: 60px;
+            flex: 1;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: white;
+            border: 1px solid #b8c6da;
+            color: #142a52;
+        }
+
+        .confirm {
+            background: #2867e8;
+            border: none;
+            color: white;
+        }
+
+        .confirm:hover {
+            background: #1d58d1;
+        }
+
+        .cancel:hover {
+            background: #f5f7fa;
+        }
+
+        /* MOBILE */
+        @media (max-width: 650px) {
+            .confirm-box {
+                width: 92%;
+                padding: 24px;
+            }
+
+            .title {
+                font-size: 25px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="confirm-box">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="title-section">
+
+                <div class="route-icon">
+                    ⦿
+                </div>
+
+                <div class="title">
+                    Confirm Trip
+                </div>
+            </div>
+
+            <div class="close" onclick="goToDashboard()">
+                ×
+            </div>
+        </div>
+
+
+        <!-- DATE -->
+        <div class="section">
+
+            <div class="label">
+                <span class="small-icon">▣</span>
+                <span>Date</span>
+            </div>
+
+            <div class="input-box">
+                ▣ &nbsp;&nbsp; Today, 09 Sep 2025
+            </div>
+
+        </div>
+
+
+        <!-- ROUTE -->
+        <div class="section">
+
+            <div class="label">
+                <span class="small-icon">⌘</span>
+                <span>Route</span>
+            </div>
+
+            <div class="route-box">
+
+                <!-- FROM -->
+                <div class="route-item">
+
+                    <div class="route-dot green"></div>
+
+                    <div class="route-line"></div>
+
+                    <div class="from">
+                        From
+                    </div>
+
+                    <div class="place">
+                        Pondicherry
+                    </div>
+
+                </div>
+
+
+                <!-- TO -->
+                <div class="route-item">
+
+                    <div class="route-dot red"></div>
+
+                    <div class="to">
+                        To
+                    </div>
+
+                    <div class="place">
+                        HCL Technologies
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ESTIMATED START TIME -->
+        <div class="section">
+
+            <div class="label">
+                <span class="small-icon">⌖</span>
+                <span>Estimated Start Time</span>
+            </div>
+
+            <div class="input-box">
+                ◷ &nbsp;&nbsp; 07:30 AM
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="buttons">
+
+            <button class="cancel" onclick="goToDashboard()">
+                Cancel
+            </button>
+
+            <button class="confirm" onclick="confirmTrip()">
+                ✓ &nbsp; Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+        function goToDashboard() {
+            window.location.href = "02_driver_dashboard.html";
+        }
+
+        function confirmTrip() {
+            // Tells the dashboard to actually start the trip timer.
+            window.location.href = "02_driver_dashboard.html?action=start";
+        }
+    </script>
+
+</body>
+</html>

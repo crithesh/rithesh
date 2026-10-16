@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFMS Fleet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #dcecff, #f5f9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 460px;
+            min-height: 780px;
+            background: linear-gradient(145deg, #b9d5f5, #e7f1fc);
+            border-radius: 30px;
+            padding: 55px 35px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page::before {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
+            left: -80px;
+            bottom: 30px;
+        }
+
+        .page::after {
+            content: "";
+            position: absolute;
+            width: 160px;
+            height: 180px;
+            background: rgba(116, 169, 225, 0.25);
+            border-radius: 25px;
+            right: -70px;
+            bottom: -30px;
+        }
+
+        .logo {
+            width: 88px;
+            height: 88px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            color: #23458d;
+            box-shadow: 0 8px 20px rgba(50, 90, 150, 0.12);
+            margin-bottom: 25px;
+            z-index: 2;
+        }
+
+        h1 {
+            color: #21458f;
+            font-size: 38px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 45px;
+            z-index: 2;
+        }
+
+        .login-card {
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            padding: 35px 27px 30px;
+            box-shadow: 0 12px 30px rgba(60, 90, 130, 0.15);
+            z-index: 2;
+        }
+
+        .login-heading {
+            text-align: center;
+            color: #172b4d;
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            color: #172b4d;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 54px;
+            border: 1px solid #d9e0ea;
+            border-radius: 11px;
+            padding: 0 45px 0 42px;
+            font-size: 15px;
+            outline: none;
+            color: #172b4d;
+            background: #fbfcfe;
+            transition: 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: #2864df;
+            box-shadow: 0 0 0 3px rgba(40, 100, 223, 0.10);
+            background: white;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9aa7b8;
+            font-size: 18px;
+        }
+
+        .eye-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #8e9bab;
+            font-size: 18px;
+            padding: 8px;
+        }
+
+        .eye-button:hover {
+            color: #2864df;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0 25px;
+            gap: 10px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #5c6573;
+            font-size: 13px;
+        }
+
+        .remember input {
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+        }
+
+        .forgot {
+            border: none;
+            background: transparent;
+            color: #2864df;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #3673e8, #2256cf);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 15px rgba(37, 91, 207, 0.25);
+        }
+
+        .login-button:active {
+            transform: scale(0.98);
+        }
+
+        .security {
+            text-align: center;
+            margin-top: 25px;
+            color: #9aa5b3;
+            font-size: 12px;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+
+        .success {
+            color: #198754;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 0;
+                align-items: stretch;
+            }
+
+            .page {
+                max-width: none;
+                min-height: 100vh;
+                border-radius: 0;
+                padding: 45px 22px 30px;
+            }
+
+            .logo {
+                width: 75px;
+                height: 75px;
+                font-size: 35px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .login-card {
+                padding: 30px 22px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+
+        <div class="logo">🚌</div>
+
+        <h1>RFMS Fleet</h1>
+
+        <a href="00_opening.html" style="display:block;text-align:center;margin:0 0 25px;color:#2864df;font-size:13px;font-weight:600;text-decoration:none;z-index:2;">&larr; Back to role selection</a>
+
+        <div class="login-card">
+
+            <div class="login-heading">👤 Driver Login</div>
+
+            <div class="field">
+                <label for="driverId">Driver ID</label>
+                <div class="input-box">
+                    <span class="input-icon">♙</span>
+                    <input type="text" id="driverId" placeholder="Enter Driver ID" autocomplete="username">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <div class="input-box">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password">
+                    <button type="button" class="eye-button" id="eyeButton" aria-label="Show password">👁</button>
+                </div>
+            </div>
+
+            <div class="options">
+                <label class="remember">
+                    <input type="checkbox" id="remember">
+                    <span>Remember me</span>
+                </label>
+                <button type="button" class="forgot" id="forgotButton">Forgot Password?</button>
+            </div>
+
+            <button type="button" class="login-button" id="loginButton">Login</button>
+
+            <div id="message" class="message" aria-live="polite"></div>
+
+            <div class="security">🔒 Secure login for authorized drivers only</div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const driverId = document.getElementById("driverId");
+        const password = document.getElementById("password");
+        const eyeButton = document.getElementById("eyeButton");
+        const loginButton = document.getElementById("loginButton");
+        const forgotButton = document.getElementById("forgotButton");
+        const remember = document.getElementById("remember");
+        const message = document.getElementById("message");
+
+        eyeButton.addEventListener("click", function () {
+            if (password.type === "password") {
+                password.type = "text";
+                eyeButton.textContent = "🙈";
+                eyeButton.setAttribute("aria-label", "Hide password");
+            } else {
+                password.type = "password";
+                eyeButton.textContent = "👁";
+                eyeButton.setAttribute("aria-label", "Show password");
+            }
+        });
+
+        loginButton.addEventListener("click", function () {
+
+            const id = driverId.value.trim();
+            const pass = password.value.trim();
+
+            message.className = "message";
+
+            if (id === "" && pass === "") {
+                message.textContent = "Please enter Driver ID and Password.";
+                message.classList.add("error");
+                driverId.focus();
+                return;
+            }
+
+            if (id === "") {
+                message.textContent = "Please enter your Driver ID.";
+                message.classList.add("error");
+                driverId.focus();
+                return;
+            }
+
+            if (pass === "") {
+                message.textContent = "Please enter your Password.";
+                message.classList.add("error");
+                password.focus();
+                return;
+            }
+
+            /* Real login check against the Flask backend */
+            message.textContent = "Checking your details...";
+            message.className = "message";
+
+            fetch("http://127.0.0.1:5000/api/driver/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    driver_code: id,
+                    password: pass
+                })
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+
+                if (data.success) {
+
+                    message.textContent = "Login successful! Welcome to RFMS Fleet.";
+                    message.classList.add("success");
+
+                    localStorage.setItem("loggedInDriver", JSON.stringify(data.driver));
+
+                    setTimeout(function () {
+                        window.location.href = "02_driver_dashboard.html";
+                    }, 500);
+
+                } else {
+
+                    message.textContent = data.message;
+                    message.classList.add("error");
+                }
+            })
+            .catch(function (error) {
+
+                message.textContent = "Could not reach the server. Is app.py running?";
+                message.classList.add("error");
+                console.error(error);
+            });
+
+        });
+
+        forgotButton.addEventListener("click", function () {
+
+            const id = driverId.value.trim();
+
+            if (id === "") {
+                message.textContent = "Enter your Driver ID first.";
+                message.className = "message error";
+                driverId.focus();
+                return;
+            }
+
+            message.textContent = "Password reset request submitted.";
+            message.className = "message success";
+        });
+
+        password.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                loginButton.click();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

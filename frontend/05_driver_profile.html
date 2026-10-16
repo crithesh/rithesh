@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f1f1f1;
+        color: #222;
+    }
+
+    .mobile-page {
+        width: 540px;
+        min-height: 100vh;
+        margin: auto;
+        background: white;
+        position: relative;
+        padding-bottom: 105px;
+    }
+
+    /* Top bar */
+    .top-bar {
+        height: 40px;
+        background: #1768bd;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 25px;
+        font-size: 21px;
+        font-weight: bold;
+    }
+
+    .back {
+        font-size: 28px;
+        margin-right: 25px;
+        line-height: 1;
+    }
+
+    /* Header background */
+    .header-bg {
+        height: 143px;
+        background: #eaf4ff;
+    }
+
+    /* Profile name */
+    .profile-name {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 28px;
+        margin-bottom: 65px;
+    }
+
+    /* Profile box */
+    .profile-box {
+        width: 88%;
+        margin: auto;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        background: white;
+    }
+
+    .profile-item {
+        height: 102px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .profile-item:last-child {
+        border-bottom: none;
+    }
+
+    .icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #eaf3ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 25px;
+        margin-right: 18px;
+    }
+
+    .details {
+        flex: 1;
+    }
+
+    .details h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .details p {
+        font-size: 16px;
+        color: #777;
+    }
+
+    .arrow {
+        font-size: 30px;
+        color: #777;
+    }
+
+    /* Logout */
+    .logout {
+        width: 88%;
+        height: 72px;
+        margin: 25px auto 0;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #d62828;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .logout-icon {
+        margin-right: 12px;
+        font-size: 23px;
+    }
+
+    /* Bottom navigation */
+    .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 105px;
+        background: white;
+        border-top: 1px solid #ddd;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .nav-item {
+        width: 50%;
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .nav-icon {
+        display: block;
+        font-size: 23px;
+        margin-bottom: 9px;
+    }
+
+    .nav-item.active {
+        color: #1768bd;
+        font-weight: bold;
+    }
+
+    .nav-item a {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="mobile-page">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+        <span class="back" style="cursor:pointer;" onclick="window.location.href='02_driver_dashboard.html'">‹</span>
+        <span>Profile</span>
+    </div>
+
+    <!-- Light blue header -->
+    <div class="header-bg"></div>
+
+    <!-- Profile name -->
+    <div class="profile-name">
+        Ramesh Kumar
+    </div>
+
+    <!-- Profile details -->
+    <div class="profile-box">
+
+        <div class="profile-item">
+            <div class="icon">👤</div>
+
+            <div class="details">
+                <h3>Name</h3>
+                <p>Ramesh Kumar</p>
+            </div>
+
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="profile-item">
+            <div class="icon">☎</div>
+
+            <div class="details">
+                <h3>Phone Number</h3>
+                <p>+91 98765 43210</p>
+            </div>
+
+            <div class="arrow">›</div>
+        </div>
+
+    </div>
+
+    <!-- Logout -->
+    <div class="logout" style="cursor:pointer;" onclick="window.location.href='00_opening.html'">
+        <span class="logout-icon">→</span>
+        Logout
+    </div>
+
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+
+        <div class="nav-item">
+            <a href="02_driver_dashboard.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="nav-item active">
+            <a href="#">
+                <span class="nav-icon">●</span>
+                Profile
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

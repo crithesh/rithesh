@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trip Analytics</title>
+
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+
+    body { background: #f5f7fb; }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: 18px 24px 50px; }
+
+    .top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .back-link {
+        color: #1976d2;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    /* TABLE */
+    .table-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        padding: 16px;
+        overflow-x: auto;
+        margin-bottom: 24px;
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+
+    th {
+        text-align: left;
+        font-size: 11.5px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        padding: 10px 8px;
+        border-bottom: 1.5px solid #eee;
+    }
+
+    td { padding: 10px 8px; font-size: 13.5px; color: #222; border-bottom: 1px solid #f1f1f1; }
+
+    .status-on-time { color: #168b2f; font-weight: 700; }
+    .status-late { color: #8f2727; font-weight: 700; }
+
+    /* ANALYTICS */
+    .analytics {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        padding: 22px 26px;
+    }
+
+    .analytics-title { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+    .analytics-subtitle { font-size: 13px; color: #777; margin-bottom: 20px; }
+
+    .analytics-list {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+    }
+
+    .analytics-item { min-width: 0; }
+    .analytics-label { font-size: 12.5px; color: #777; margin-bottom: 6px; }
+    .analytics-value { font-size: 24px; font-weight: 700; }
+
+    .analytics-item.on-time .analytics-value { color: #168b2f; }
+    .analytics-item.late .analytics-value { color: #8f2727; }
+
+    @media (max-width: 760px) {
+        .analytics-list { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="top-row">
+        <a class="back-link" href="03_route.html">&larr; Back to dashboard</a>
+    </div>
+
+    <!-- ================= TABLE ================= -->
+    <div class="table-box">
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Actual Count</th>
+                    <th>Boarded Seat</th>
+                    <th>Utilization</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Travel Time</th>
+                    <th>Trip Status</th>
+                    <th>Timing Status</th>
+                </tr>
+            </thead>
+            <tbody id="tripTableBody">
+                <tr><td colspan="11" style="text-align:center;color:#999;">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= ANALYTICS ================= -->
+    <div class="analytics">
+        <div class="analytics-title">Analytics</div>
+        <div class="analytics-subtitle">All routes - live data</div>
+
+        <div class="analytics-list">
+            <div class="analytics-item on-time">
+                <div class="analytics-label">On time trips</div>
+                <div class="analytics-value" id="onTimeValue">-</div>
+            </div>
+
+            <div class="analytics-item late">
+                <div class="analytics-label">Late trips</div>
+                <div class="analytics-value" id="lateValue">-</div>
+            </div>
+
+            <div class="analytics-item">
+                <div class="analytics-label">Total trips</div>
+                <div class="analytics-value" id="totalTripsValue">-</div>
+            </div>
+
+            <div class="analytics-item headcount">
+                <div class="analytics-label">Total headcount</div>
+                <div class="analytics-value" id="headcountValue">-</div>
+            </div>
+
+            <div class="analytics-item utilization">
+                <div class="analytics-label">Utilization</div>
+                <div class="analytics-value" id="utilizationValue">-</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    fetch("http://127.0.0.1:5000/api/trip-table")
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+
+            const tbody = document.getElementById("tripTableBody");
+            tbody.innerHTML = "";
+
+            if (!data.success || data.trips.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#999;">No trips yet.</td></tr>';
+                return;
+            }
+
+            data.trips.forEach(function (trip) {
+
+                const timingClass = trip.timing_status === "late" ? "status-late" : "status-on-time";
+                const timingText = trip.timing_status === "late" ? "Late" : "On Time";
+
+                const tr = document.createElement("tr");
+                tr.innerHTML =
+                    "<td>" + (trip.route_name || "") + "</td>" +
+                    "<td>" + (trip.start_point || "") + "</td>" +
+                    "<td>" + (trip.end_point || "") + "</td>" +
+                    "<td>" + trip.actual_seating_number + "</td>" +
+                    "<td>" + trip.total_headcount + "</td>" +
+                    "<td>" + trip.utilization + "%</td>" +
+                    "<td>" + trip.start_time + "</td>" +
+                    "<td>" + trip.end_time + "</td>" +
+                    "<td>" + (trip.travel_time || "-") + "</td>" +
+                    "<td style=\"text-transform:capitalize;\">" + trip.trip_status + "</td>" +
+                    "<td class=\"" + timingClass + "\">" + timingText + "</td>";
+
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(function (err) {
+            document.getElementById("tripTableBody").innerHTML =
+                '<tr><td colspan="11" style="text-align:center;color:#d93025;">Could not reach the server. Is app.py running?</td></tr>';
+            console.error(err);
+        });
+
+    fetch("http://127.0.0.1:5000/api/analysis")
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (!data.success) return;
+            document.getElementById("onTimeValue").innerText = data.on_time_trips;
+            document.getElementById("lateValue").innerText = data.late_trips;
+            document.getElementById("totalTripsValue").innerText = data.total_trips;
+            document.getElementById("headcountValue").innerText = data.total_headcount;
+            document.getElementById("utilizationValue").innerText = data.utilization + "%";
+        })
+        .catch(function (err) { console.error(err); });
+
+</script>
+
+</body>
+</html>

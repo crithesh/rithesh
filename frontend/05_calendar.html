@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Route Calendar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #cfe3fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 84%;
+            max-width: 1350px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            padding: 25px 35px 35px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .route-title {
+            margin: 0;
+            color: #14518a;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-button {
+            border: none;
+            background: transparent;
+            color: #14518a;
+            font-size: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 35px;
+            width: 160px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .menu button {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .menu button:hover {
+            background: #eef5fb;
+        }
+
+        /* DRIVER SELECTOR */
+
+        .driver-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .driver-label {
+            color: #14518a;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        #driverSelect {
+            min-width: 260px;
+            padding: 11px 14px;
+            border: 1px solid #c9d8e7;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        #driverSelect:focus {
+            border-color: #1683ff;
+        }
+
+        .selected-route {
+            color: #666;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* MONTH */
+
+        .month-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 35px;
+            margin-bottom: 32px;
+        }
+
+        .month-title {
+            min-width: 235px;
+            text-align: center;
+            color: #14518a;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .nav-button {
+            width: 52px;
+            height: 52px;
+            border: none;
+            border-radius: 50%;
+            background: #e6f0fc;
+            color: #14518a;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #d5e6f9;
+        }
+
+        /* CALENDAR */
+
+        .calendar-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .calendar {
+            min-width: 850px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            padding: 5px 0 10px;
+            color: #666;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .weekday.sunday {
+            color: #d51f3c;
+        }
+
+        .empty {
+            height: 140px;
+        }
+
+        .date-box {
+            height: 140px;
+            border: 1px solid #d3dfeb;
+            border-radius: 11px;
+            background: white;
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: 0.2s;
+        }
+
+        .date-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 81, 138, 0.12);
+        }
+
+        .date-box.sunday {
+            background: #fff0f3;
+            border-color: #f0bdca;
+        }
+
+        .date-box.selected {
+            background: #e8f3ff;
+            border: 2px solid #1683ff;
+            box-shadow: 0 0 8px rgba(22, 131, 255, 0.20);
+            transform: none;
+        }
+
+        .date-box.sunday.selected {
+            background: #e8f3ff;
+            border: 2px solid #1683ff;
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .on-time {
+            color: #009447;
+        }
+
+        .late {
+            color: #d71920;
+        }
+
+        .headcount {
+            color: #777;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .date-number {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 29px;
+            font-weight: 800;
+        }
+
+        .sunday .date-number {
+            color: #d51f3c;
+            font-size: 29px;
+            font-weight: 800;
+        }
+
+        .date-box.selected .date-number {
+            color: #000;
+        }
+
+        .date-box.sunday.selected .date-number {
+            color: #000;
+        }
+
+        .percentage {
+            font-size: 16px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* BUTTONS */
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 22px;
+            margin-bottom: 25px;
+        }
+
+        .action-button {
+            flex: 1;
+            height: 54px;
+            border: none;
+            border-radius: 9px;
+            background: #14518a;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-button:hover {
+            background: #0d3f6b;
+            transform: translateY(-1px);
+        }
+
+        /* DETAILS */
+
+        .details-box {
+            display: none;
+            background: #f4f8fc;
+            border-left: 5px solid #1683ff;
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-top: 5px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .details-box.show {
+            display: block;
+        }
+
+        .details-title {
+            margin: 0 0 15px;
+            color: #14518a;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .details-item {
+            padding-left: 15px;
+            border-left: 1px solid #d4e0ec;
+        }
+
+        .details-item:first-child {
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .details-label {
+            display: block;
+            color: #14518a;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .details-value {
+            color: #333;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .details-value.late-value {
+            color: #d71920;
+        }
+
+        .details-value.on-time-value {
+            color: #009447;
+        }
+
+        @media (max-width: 800px) {
+
+            .container {
+                width: 94%;
+                padding: 20px;
+            }
+
+            .route-title {
+                font-size: 23px;
+            }
+
+            .month-title {
+                font-size: 22px;
+            }
+
+            .month-navigation {
+                gap: 15px;
+            }
+
+            .calendar {
+                min-width: 850px;
+            }
+
+            .details-content {
+                grid-template-columns: 1fr;
+            }
+
+            .details-item {
+                border-left: none;
+                border-top: 1px solid #d4e0ec;
+                padding: 10px 0 0;
+            }
+
+            .details-item:first-child {
+                border-top: none;
+            }
+
+            .driver-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #driverSelect {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <a
+                href="03_route.html"
+                style="
+                    display:block;
+                    color:#14518a;
+                    font-size:13px;
+                    font-weight:700;
+                    text-decoration:none;
+                    margin-bottom:6px;
+                "
+            >
+                &larr; Back to dashboard
+            </a>
+
+            <h1
+                class="route-title"
+                id="routeTitle"
+            >
+                Route Calendar
+            </h1>
+
+        </div>
+
+
+        <div class="menu-container">
+
+            <button
+                class="menu-button"
+                onclick="toggleMenu()"
+            >
+                ⋯
+            </button>
+
+            <div
+                class="menu"
+                id="menu"
+            >
+
+                <button onclick="goToToday()">
+                    Go to today
+                </button>
+
+                <button onclick="closeMenu()">
+                    Close menu
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DRIVER SELECTOR -->
+
+    <div class="driver-section">
+
+        <span class="driver-label">
+            Driver:
+        </span>
+
+        <select
+            id="driverSelect"
+            onchange="changeDriver()"
+        >
+
+            <option value="">
+                Select Driver
+            </option>
+
+        </select>
+
+        <span
+            class="selected-route"
+            id="selectedRoute"
+        ></span>
+
+    </div>
+
+
+    <!-- MONTH NAVIGATION -->
+
+    <div class="month-navigation">
+
+        <button
+            class="nav-button"
+            onclick="previousMonth()"
+        >
+            ‹
+        </button>
+
+        <div
+            class="month-title"
+            id="monthTitle"
+        ></div>
+
+        <button
+            class="nav-button"
+            onclick="nextMonth()"
+        >
+            ›
+        </button>
+
+    </div>
+
+
+    <!-- CALENDAR -->
+
+    <div class="calendar-wrapper">
+
+        <div
+            class="calendar"
+            id="calendar"
+        ></div>
+
+    </div>
+
+
+    <!-- ACTION BUTTONS -->
+
+    <div class="action-buttons">
+
+        <button
+            class="action-button"
+            id="analysisButton"
+        >
+            Analysis
+        </button>
+
+        <button
+            class="action-button"
+            id="reportButton"
+        >
+            Report
+        </button>
+
+    </div>
+
+
+    <!-- DETAILS -->
+
+    <div
+        class="details-box"
+        id="detailsBox"
+    >
+
+        <h2
+            class="details-title"
+            id="detailsTitle"
+        >
+            Day Details
+        </h2>
+
+        <div class="details-content">
+
+            <div class="details-item">
+
+                <span class="details-label">
+                    Status
+                </span>
+
+                <span
+                    class="details-value"
+                    id="detailsStatus"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-label">
+                    Headcount
+                </span>
+
+                <span
+                    class="details-value"
+                    id="detailsHeadcount"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-label">
+                    Attendance
+                </span>
+
+                <span
+                    class="details-value"
+                    id="detailsPercentage"
+                >
+                    -
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let calendarData = {};
+
+let currentDate = new Date();
+
+let selectedDate = null;
+
+let selectedDriverId = null;
+
+
+/* ==========================================
+   LOAD DRIVERS
+========================================== */
+
+function loadDrivers() {
+
+    fetch("http://127.0.0.1:5000/api/drivers")
+
+    .then(function(response) {
+
+        if (!response.ok) {
+            throw new Error("Could not load drivers.");
+        }
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        const select =
+            document.getElementById("driverSelect");
+
+        select.innerHTML = `
+            <option value="">
+                Select Driver
+            </option>
+        `;
+
+
+        if (
+            data.success &&
+            data.drivers
+        ) {
+
+            data.drivers.forEach(function(driver) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    driver.driver_id;
+
+                option.textContent =
+                    driver.name;
+
+                select.appendChild(option);
+
+            });
+
+        }
+
+    })
+
+    .catch(function(error) {
+
+        console.error(
+            "Could not load drivers:",
+            error
+        );
+
+    });
+
+}
+
+
+/* ==========================================
+   CHANGE DRIVER
+========================================== */
+
+function changeDriver() {
+
+    const select =
+        document.getElementById("driverSelect");
+
+    selectedDriverId =
+        select.value;
+
+    selectedDate = null;
+
+    document
+        .getElementById("detailsBox")
+        .classList.remove("show");
+
+    document.getElementById(
+        "selectedRoute"
+    ).textContent = "";
+
+
+    if (!selectedDriverId) {
+
+        document.getElementById(
+            "routeTitle"
+        ).textContent =
+            "Route Calendar";
+
+        calendarData = {};
+
+        renderCalendarGrid();
+
+        return;
+    }
+
+
+    generateCalendar();
+
+}
+
+
+/* ==========================================
+   LOAD CALENDAR DATA
+========================================== */
+
+function loadCalendarData(callback) {
+
+    const year =
+        currentDate.getFullYear();
+
+    const month =
+        currentDate.getMonth() + 1;
+
+
+    let url =
+        "http://127.0.0.1:5000/api/calendar" +
+        "?year=" + year +
+        "&month=" + month;
+
+
+    if (selectedDriverId) {
+
+        url +=
+            "&driver_id=" +
+            encodeURIComponent(
+                selectedDriverId
+            );
+
+    }
+
+
+    fetch(url)
+
+    .then(function(response) {
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load calendar data."
+            );
+        }
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        calendarData =
+            (
+                data.success &&
+                data.calendar_data
+            )
+                ? data.calendar_data
+                : {};
+
+
+        if (
+            data.driver_name &&
+            data.route_name
+        ) {
+
+            document.getElementById(
+                "routeTitle"
+            ).textContent =
+                data.driver_name +
+                " - " +
+                data.route_name;
+
+
+            document.getElementById(
+                "selectedRoute"
+            ).textContent =
+                data.route_name;
+
+        }
+
+        else if (data.driver_name) {
+
+            document.getElementById(
+                "routeTitle"
+            ).textContent =
+                data.driver_name +
+                " - Route Calendar";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "routeTitle"
+            ).textContent =
+                "Route Calendar";
+
+        }
+
+
+        callback();
+
+    })
+
+    .catch(function(error) {
+
+        console.error(
+            "Could not load calendar data:",
+            error
+        );
+
+        calendarData = {};
+
+        callback();
+
+    });
+
+}
+
+
+/* ==========================================
+   GENERATE CALENDAR
+========================================== */
+
+function generateCalendar() {
+
+    loadCalendarData(
+        renderCalendarGrid
+    );
+
+}
+
+
+/* ==========================================
+   RENDER CALENDAR
+========================================== */
+
+function renderCalendarGrid() {
+
+    const calendar =
+        document.getElementById("calendar");
+
+    calendar.innerHTML = "";
+
+
+    const year =
+        currentDate.getFullYear();
+
+    const month =
+        currentDate.getMonth();
+
+
+    document.getElementById(
+        "monthTitle"
+    ).textContent =
+        currentDate.toLocaleString(
+            "default",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+
+    const weekdays = [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+    ];
+
+
+    weekdays.forEach(
+        function(day, index) {
+
+            const weekday =
+                document.createElement("div");
+
+            weekday.className =
+                "weekday";
+
+            weekday.textContent =
+                day;
+
+
+            if (index === 6) {
+
+                weekday.classList.add(
+                    "sunday"
+                );
+
+            }
+
+
+            calendar.appendChild(
+                weekday
+            );
+
+        }
+    );
+
+
+    let firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
+
+
+    firstDay =
+        firstDay === 0
+            ? 6
+            : firstDay - 1;
+
+
+    const numberOfDays =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    for (
+        let i = 0;
+        i < firstDay;
+        i++
+    ) {
+
+        const empty =
+            document.createElement("div");
+
+        empty.className = "empty";
+
+        calendar.appendChild(empty);
+
+    }
+
+
+    for (
+        let day = 1;
+        day <= numberOfDays;
+        day++
+    ) {
+
+        const dateBox =
+            document.createElement("div");
+
+        dateBox.className =
+            "date-box";
+
+
+        const date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+
+        const isSunday =
+            date.getDay() === 0;
+
+
+        if (isSunday) {
+
+            dateBox.classList.add(
+                "sunday"
+            );
+
+        }
+
+
+        const data =
+            calendarData[day] || {
+
+                status: "Pending",
+
+                headcount: "-",
+
+                percentage: "-"
+
+            };
+
+
+        if (
+            selectedDate &&
+            selectedDate.year === year &&
+            selectedDate.month === month &&
+            selectedDate.day === day
+        ) {
+
+            dateBox.classList.add(
+                "selected"
+            );
+
+        }
+
+
+        const dateNumber =
+            document.createElement("div");
+
+        dateNumber.className =
+            "date-number";
+
+        dateNumber.textContent =
+            day;
+
+
+        if (!isSunday) {
+
+            const topRow =
+                document.createElement("div");
+
+            topRow.className =
+                "top-row";
+
+
+            const status =
+                document.createElement("div");
+
+            status.className =
+                "status";
+
+            status.textContent =
+                data.status;
+
+
+            if (
+                data.status === "On Time"
+            ) {
+
+                status.classList.add(
+                    "on-time"
+                );
+
+            }
+
+
+            if (
+                data.status === "Late"
+            ) {
+
+                status.classList.add(
+                    "late"
+                );
+
+            }
+
+
+            const headcount =
+                document.createElement("div");
+
+            headcount.className =
+                "headcount";
+
+            headcount.textContent =
+                data.headcount;
+
+
+            topRow.appendChild(status);
+
+            topRow.appendChild(headcount);
+
+
+            const percentage =
+                document.createElement("div");
+
+            percentage.className =
+                "percentage";
+
+            percentage.textContent =
+                data.percentage;
+
+
+            dateBox.appendChild(topRow);
+
+            dateBox.appendChild(dateNumber);
+
+            dateBox.appendChild(percentage);
+
+        }
+
+        else {
+
+            dateBox.appendChild(
+                dateNumber
+            );
+
+        }
+
+
+        dateBox.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(
+                        ".date-box"
+                    )
+                    .forEach(
+                        function(box) {
+
+                            box.classList.remove(
+                                "selected"
+                            );
+
+                        }
+                    );
+
+
+                dateBox.classList.add(
+                    "selected"
+                );
+
+
+                selectedDate = {
+
+                    year: year,
+
+                    month: month,
+
+                    day: day
+
+                };
+
+
+                if (!isSunday) {
+
+                    showDetails(
+                        day,
+                        data
+                    );
+
+                }
+                else {
+
+                    document
+                        .getElementById(
+                            "detailsBox"
+                        )
+                        .classList.remove(
+                            "show"
+                        );
+
+                }
+
+            }
+        );
+
+
+        calendar.appendChild(
+            dateBox
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   SHOW DAY DETAILS
+========================================== */
+
+function showDetails(day, data) {
+
+    const detailsBox =
+        document.getElementById(
+            "detailsBox"
+        );
+
+
+    detailsBox.classList.add(
+        "show"
+    );
+
+
+    document.getElementById(
+        "detailsTitle"
+    ).textContent =
+        "Day " +
+        day +
+        " Details";
+
+
+    const statusElement =
+        document.getElementById(
+            "detailsStatus"
+        );
+
+
+    statusElement.textContent =
+        data.status;
+
+
+    statusElement.classList.remove(
+        "late-value",
+        "on-time-value"
+    );
+
+
+    if (
+        data.status === "Late"
+    ) {
+
+        statusElement.classList.add(
+            "late-value"
+        );
+
+    }
+
+    else if (
+        data.status === "On Time"
+    ) {
+
+        statusElement.classList.add(
+            "on-time-value"
+        );
+
+    }
+
+
+    document.getElementById(
+        "detailsHeadcount"
+    ).textContent =
+        data.headcount;
+
+
+    document.getElementById(
+        "detailsPercentage"
+    ).textContent =
+        data.percentage;
+
+
+    detailsBox.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+
+/* ==========================================
+   PREVIOUS MONTH
+========================================== */
+
+function previousMonth() {
+
+    currentDate.setMonth(
+        currentDate.getMonth() - 1
+    );
+
+    selectedDate = null;
+
+    document
+        .getElementById("detailsBox")
+        .classList.remove("show");
+
+    generateCalendar();
+
+}
+
+
+/* ==========================================
+   NEXT MONTH
+========================================== */
+
+function nextMonth() {
+
+    currentDate.setMonth(
+        currentDate.getMonth() + 1
+    );
+
+    selectedDate = null;
+
+    document
+        .getElementById("detailsBox")
+        .classList.remove("show");
+
+    generateCalendar();
+
+}
+
+
+/* ==========================================
+   MENU
+========================================== */
+
+function toggleMenu() {
+
+    const menu =
+        document.getElementById("menu");
+
+
+    if (
+        menu.style.display === "block"
+    ) {
+
+        menu.style.display = "none";
+
+    }
+
+    else {
+
+        menu.style.display = "block";
+
+    }
+
+}
+
+
+function closeMenu() {
+
+    document.getElementById(
+        "menu"
+    ).style.display = "none";
+
+}
+
+
+/* ==========================================
+   GO TO TODAY
+========================================== */
+
+function goToToday() {
+
+    currentDate = new Date();
+
+    selectedDate = null;
+
+    document
+        .getElementById("detailsBox")
+        .classList.remove("show");
+
+    generateCalendar();
+
+    closeMenu();
+
+}
+
+
+/* ==========================================
+   ANALYSIS BUTTON
+========================================== */
+
+document.getElementById(
+    "analysisButton"
+).addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "10_dashboard_analysis.html";
+
+    }
+);
+
+
+/* ==========================================
+   REPORT BUTTON
+========================================== */
+
+document.getElementById(
+    "reportButton"
+).addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "07_report.html";
+
+    }
+);
+
+
+/* ==========================================
+   START
+========================================== */
+
+loadDrivers();
+
+</script>
+
+</body>
+
+</html>

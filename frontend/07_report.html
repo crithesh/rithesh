@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #111111;
+        }
+
+        .container {
+            width: 90%;
+            margin: 50px auto;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            background-color: #ffffff;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <a href="javascript:history.back()" style="display:inline-block;color:#1976d2;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:14px;">&larr; Back</a>
+        <h1>Report</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Driver Name</th>
+                    <th>Phone Number</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+
+            <tbody id="reportBody">
+                <tr><td colspan="5">Loading...</td></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        fetch("http://127.0.0.1:5000/api/report")
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+
+                const tbody = document.getElementById("reportBody");
+                tbody.innerHTML = "";
+
+                if (!data.success || data.trips.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No trips recorded yet.</td></tr>';
+                    return;
+                }
+
+                data.trips.forEach(function (trip) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${trip.trip_date}</td>
+                        <td>${trip.driver_name}</td>
+                        <td>${trip.phone || "-"}</td>
+                        <td>${trip.start_time || "-"}</td>
+                        <td>${trip.end_time || "-"}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(function (error) {
+                document.getElementById("reportBody").innerHTML =
+                    '<tr><td colspan="5">Could not reach the server.</td></tr>';
+                console.error(error);
+            });
+    </script>
+
+</body>
+</html>

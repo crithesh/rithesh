@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Trip</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .trip-box {
+            width: 430px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 22px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .close {
+            font-size: 22px;
+            color: #777;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #d8dce2;
+            border-radius: 5px;
+            padding: 0 13px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2878d7;
+        }
+
+        .optional {
+            color: #777;
+            font-weight: normal;
+        }
+
+        .stops-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .add-stop {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #a9c5e8;
+            background: #f1f6fc;
+            color: #2878d7;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .add-stop:hover {
+            background: #e4effc;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .cancel {
+            height: 40px;
+            padding: 0 18px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #555;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .create {
+            height: 40px;
+            padding: 0 18px;
+            background: #2878d7;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .create:hover {
+            background: #1768c5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="trip-box">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="title">🚍 New Trip</div>
+            <div class="close" onclick="cancelTrip()">×</div>
+        </div>
+
+        <!-- Driver Name -->
+        <div class="form-group">
+            <label>Driver Name</label>
+            <input type="text" id="driverName" placeholder="♙  Enter driver name (must already exist)">
+        </div>
+
+        <!-- Actual Seating Number -->
+        <div class="form-group">
+            <label>Actual Seating Number</label>
+            <input type="number" id="seatingNumber" placeholder="▱  Enter seating number">
+        </div>
+
+        <!-- Vehicle Number -->
+        <div class="form-group">
+            <label>Vehicle Number <span class="optional">(Optional)</span></label>
+            <input type="text" id="vehicleNumber" placeholder="🚗  Enter vehicle number">
+        </div>
+
+        <!-- Shift -->
+        <div class="form-group">
+            <label>Shift</label>
+            <select id="shift" style="width:100%;height:42px;border:1px solid #d8dce2;border-radius:5px;padding:0 13px;font-size:13px;outline:none;background:white;">
+                <option value="" disabled selected>Select shift</option>
+                <option value="08:00:00">Morning</option>
+                <option value="14:00:00">Afternoon</option>
+                <option value="20:00:00">Night</option>
+            </select>
+        </div>
+
+        <!-- Start Point -->
+        <div class="form-group">
+            <label>Start Point</label>
+            <input type="text" id="startPoint" placeholder="⌖  Enter start point">
+        </div>
+
+        <!-- End Point -->
+        <div class="form-group">
+            <label>End Point</label>
+            <input type="text" id="endPoint" placeholder="⌖  Enter end point">
+        </div>
+
+        <!-- Stops -->
+        <div class="form-group">
+            <div class="stops-title">Stops</div>
+
+            <button class="add-stop" onclick="addStop()">
+                ＋ &nbsp; Add Stops
+            </button>
+
+            <div id="stopContainer"></div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button class="cancel" onclick="cancelTrip()">Cancel</button>
+            <button class="create" onclick="createTrip()">Create Trip</button>
+        </div>
+
+    </div>
+
+    <script>
+        function addStop() {
+            const container = document.getElementById("stopContainer");
+
+            const stop = document.createElement("input");
+
+            stop.type = "text";
+            stop.placeholder = "Enter stop";
+            stop.className = "stop-input";
+            stop.style.marginTop = "10px";
+
+            container.appendChild(stop);
+        }
+
+        function cancelTrip() {
+            window.location.href = "03_route.html";
+        }
+
+        function createTrip() {
+
+            const driverName = document.getElementById("driverName").value.trim();
+            const seatingNumber = document.getElementById("seatingNumber").value.trim();
+            const vehicleNumber = document.getElementById("vehicleNumber").value.trim();
+            const shift = document.getElementById("shift").value;
+            const startPoint = document.getElementById("startPoint").value.trim();
+            const endPoint = document.getElementById("endPoint").value.trim();
+
+            if (!driverName || !seatingNumber || !startPoint || !endPoint) {
+                alert("Please fill in Driver Name, Seating Number, Start Point, and End Point.");
+                return;
+            }
+
+            const stopInputs = document.querySelectorAll(".stop-input");
+            const stops = Array.from(stopInputs).map(function (input) {
+                return input.value.trim();
+            }).filter(function (value) {
+                return value !== "";
+            });
+
+            fetch("http://127.0.0.1:5000/api/routes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    driver_name: driverName,
+                    actual_seating_number: seatingNumber,
+                    vehicle_number: vehicleNumber,
+                    start_point: startPoint,
+                    end_point: endPoint,
+                    scheduled_start_time: shift || undefined,
+                    stops: stops
+                })
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+
+                if (data.success) {
+                    alert("Trip created successfully");
+                    window.location.href = "03_route.html";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(function (error) {
+                alert("Could not reach the server. Is app.py running?");
+                console.error(error);
+            });
+        }
+    </script>
+
+</body>
+</html>

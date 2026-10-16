@@ -1,0 +1,439 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Driver</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+
+            background: #ffffff;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        .trip-box {
+
+            width: 430px;
+
+            background: white;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 20px rgba(0,0,0,0.15);
+
+            padding: 22px;
+
+        }
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 22px;
+
+        }
+
+        .title {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #333;
+
+        }
+
+        .close {
+
+            font-size: 22px;
+
+            color: #777;
+
+            cursor: pointer;
+
+        }
+
+        .form-group {
+
+            margin-bottom: 16px;
+
+        }
+
+        label {
+
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: #444;
+
+            margin-bottom: 7px;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            height: 42px;
+
+            border: 1px solid #d8dce2;
+
+            border-radius: 5px;
+
+            padding: 0 13px;
+
+            font-size: 13px;
+
+            outline: none;
+
+        }
+
+        input:focus {
+
+            border-color: #2878d7;
+
+        }
+
+        .optional {
+
+            color: #777;
+
+            font-weight: normal;
+
+        }
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 28px;
+
+        }
+
+        .cancel {
+
+            height: 40px;
+
+            padding: 0 18px;
+
+            background: white;
+
+            border: 1px solid #ddd;
+
+            border-radius: 5px;
+
+            color: #555;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .create {
+
+            height: 40px;
+
+            padding: 0 18px;
+
+            background: #2878d7;
+
+            border: none;
+
+            border-radius: 5px;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .create:hover {
+
+            background: #1768c5;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="trip-box">
+
+        <div class="header">
+
+            <div class="title">
+                🧑‍✈️ Add Driver
+            </div>
+
+            <div
+                class="close"
+                onclick="cancelAdd()">
+                ×
+            </div>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Driver ID (used to log in)
+            </label>
+
+            <input
+                type="text"
+                id="driverCode"
+                placeholder="e.g. DRV1024">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Driver Name
+            </label>
+
+            <input
+                type="text"
+                id="driverName"
+                placeholder="Enter driver's full name">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="driverPassword"
+                placeholder="Set a login password">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Phone Number
+                <span class="optional">
+                    (Optional)
+                </span>
+            </label>
+
+            <input
+                type="text"
+                id="driverPhone"
+                placeholder="+91 XXXXX XXXXX">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Vehicle Number
+                <span class="optional">
+                    (Optional)
+                </span>
+            </label>
+
+            <input
+                type="text"
+                id="driverVehicle"
+                placeholder="e.g. TN 09 AB 1234">
+
+        </div>
+
+        <div class="buttons">
+
+            <button
+                class="cancel"
+                onclick="cancelAdd()">
+                Cancel
+            </button>
+
+            <button
+                class="create"
+                onclick="addDriver()">
+                Add Driver
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function cancelAdd() {
+
+            window.location.href =
+                "03_route.html";
+
+        }
+
+
+        function addDriver() {
+
+            const driver_code =
+                document.getElementById(
+                    "driverCode"
+                ).value.trim();
+
+            const name =
+                document.getElementById(
+                    "driverName"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "driverPassword"
+                ).value.trim();
+
+            const phone =
+                document.getElementById(
+                    "driverPhone"
+                ).value.trim();
+
+            const vehicle_number =
+                document.getElementById(
+                    "driverVehicle"
+                ).value.trim();
+
+
+            if (
+                !driver_code ||
+                !name ||
+                !password
+            ) {
+
+                alert(
+                    "Please fill in Driver ID, Name, and Password."
+                );
+
+                return;
+            }
+
+
+            fetch(
+                "http://127.0.0.1:5000/api/drivers",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        driver_code:
+                            driver_code,
+
+                        name:
+                            name,
+
+                        password:
+                            password,
+
+                        phone:
+                            phone,
+
+                        vehicle_number:
+                            vehicle_number
+
+                    })
+
+                }
+            )
+
+            .then(function (response) {
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                if (data.success) {
+
+                    alert(
+                        "Driver added successfully! " +
+                        "They can now log in with Driver ID: " +
+                        driver_code
+                    );
+
+                    window.location.href =
+                        "03_route.html";
+
+                } else {
+
+                    alert(data.message);
+
+                }
+
+            })
+
+            .catch(function (error) {
+
+                alert(
+                    "Could not reach the server. " +
+                    "Is app.py running?"
+                );
+
+                console.error(error);
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+```

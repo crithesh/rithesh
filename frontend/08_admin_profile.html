@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Profile</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #eef6ff;
+    min-height: 100vh;
+}
+
+/* MAIN PAGE */
+.profile-page {
+    width: 675px;
+    max-width: 100%;
+    min-height: 100vh;
+    margin: auto;
+    background: #ffffff;
+    position: relative;
+    padding-bottom: 80px;
+}
+
+/* TOP LIGHT BLUE AREA */
+.top-bg {
+    height: 110px;
+    background: #eaf5ff;
+}
+
+/* PROFILE IMAGE */
+.profile-photo {
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid white;
+    overflow: hidden;
+    background: #ddd;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* CAMERA BUTTON */
+.camera {
+    position: absolute;
+    top: 205px;
+    right: 190px;
+
+    width: 40px;
+    height: 40px;
+
+    background: #075bb5;
+    border-radius: 50%;
+
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 17px;
+}
+
+/* PROFILE INFORMATION */
+.profile-info {
+    text-align: center;
+    padding-top: 68px;
+}
+
+.profile-info h1 {
+    font-size: 18px;
+    color: #111;
+    margin-bottom: 5px;
+}
+
+.email {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.authority {
+    display: inline-block;
+
+    background: #e8f0ff;
+    color: #1454a4;
+
+    padding: 5px 13px;
+    border-radius: 18px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* DETAILS BOX */
+.details {
+    margin: 32px 20px 24px;
+
+    border: 1px solid #ddd;
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+}
+
+/* EACH ROW */
+.detail-row {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 10px 16px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+/* ROUND ICON */
+.icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 50%;
+
+    background: #edf4ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 14px;
+
+    font-size: 17px;
+}
+
+/* TEXT */
+.detail-text {
+    flex: 1;
+}
+
+.detail-text h3 {
+    font-size: 16px;
+    color: #111;
+    margin-bottom: 3px;
+}
+
+.detail-text p {
+    font-size: 13px;
+    color: #777;
+}
+
+/* ARROW */
+.arrow {
+    font-size: 23px;
+    color: #777;
+}
+
+/* LOGOUT */
+.logout {
+    margin: 0 20px;
+
+    height: 60px;
+
+    border: 1px solid #ddd;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #e00000;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    box-shadow: 0 2px 7px rgba(0,0,0,0.06);
+}
+
+/* BOTTOM NAVIGATION */
+.bottom-nav {
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 80px;
+
+    border-top: 1px solid #ddd;
+
+    background: white;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* NAVIGATION ITEMS */
+.nav-item {
+    text-align: center;
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+.nav-icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+/* ACTIVE PROFILE */
+.nav-item.active {
+    color: #075bb5;
+    font-weight: bold;
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+
+    .camera {
+        right: 25%;
+    }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="profile-page">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg"></div>
+
+
+    <!-- PROFILE PHOTO -->
+    <div class="profile-photo">
+        <img
+            src="https://randomuser.me/api/portraits/men/32.jpg"
+            alt="Admin User"
+        >
+    </div>
+
+
+    <!-- CAMERA -->
+    <div class="camera">
+        📷
+    </div>
+
+
+    <!-- PROFILE INFORMATION -->
+    <div class="profile-info">
+
+        <h1>Admin User</h1>
+
+        <div class="email">
+            admin@company.com
+        </div>
+
+        <div class="authority">
+            Authority
+        </div>
+
+    </div>
+
+
+    <!-- PROFILE DETAILS -->
+    <div class="details">
+
+        <!-- PROFILE PHOTO -->
+        <div class="detail-row">
+
+            <div class="icon">
+                👤
+            </div>
+
+            <div class="detail-text">
+                <h3>Profile Photo</h3>
+            </div>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- NAME -->
+        <div class="detail-row">
+
+            <div class="icon">
+                ♟
+            </div>
+
+            <div class="detail-text">
+
+                <h3>Name</h3>
+
+                <p>
+                    Admin User
+                </p>
+
+            </div>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- EMAIL -->
+        <div class="detail-row">
+
+            <div class="icon">
+                ✉
+            </div>
+
+            <div class="detail-text">
+
+                <h3>Email</h3>
+
+                <p>
+                    admin@company.com
+                </p>
+
+            </div>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- FORGOT PASSWORD -->
+        <div class="detail-row">
+
+            <div class="icon">
+                🔒
+            </div>
+
+            <div class="detail-text">
+
+                <h3>Forgot Password</h3>
+
+                <p>
+                    Reset your password
+                </p>
+
+            </div>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+        <!-- PHONE NUMBER REMOVED -->
+
+    </div>
+
+
+    <!-- LOGOUT -->
+    <div class="logout" style="cursor:pointer;" onclick="window.location.href='00_opening.html'">
+        ↪&nbsp;&nbsp; Logout
+    </div>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+
+        <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='03_route.html'">
+
+            <div class="nav-icon">
+                ▦
+            </div>
+
+            <div>
+                Dashboard
+            </div>
+
+        </div>
+
+
+        <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='03_route.html'">
+
+            <div class="nav-icon">
+                🚌
+            </div>
+
+            <div>
+                Route
+            </div>
+
+        </div>
+
+
+        <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='05_calendar.html'">
+
+            <div class="nav-icon">
+                📅
+            </div>
+
+            <div>
+                Calendar
+            </div>
+
+        </div>
+
+
+        <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='10_dashboard_analysis.html'">
+
+            <div class="nav-icon">
+                📊
+            </div>
+
+            <div>
+                Analysis
+            </div>
+
+        </div>
+
+
+        <div class="nav-item active" style="cursor:pointer;">
+
+            <div class="nav-icon">
+                ●
+            </div>
+
+            <div>
+                Profile
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
